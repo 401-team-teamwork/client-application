@@ -14,7 +14,6 @@ color.setTheme({
   incorrect: 'red',
 });
 
-
 const EXIT_GAME = '\u0003';
 const DELETE_LAST_ENTRY = '\u007f';
 const INDICATE_INCORRECT_KEYPRESS = 'f';
@@ -25,8 +24,14 @@ const ONE_SECOND = 1000;
 const stdin = process.stdin;
 const stdout = process.stdout;
 
+/** Class representing a generic game view. */
 class gameView{
 
+  /**
+   * Game View constructor
+   * @param string {string} - the string to type in the game
+   * @param name {string} - the name of the player
+   */
   constructor(string, name){
     this.stringToType = string;
     this.player = {
@@ -44,6 +49,10 @@ class gameView{
     };
   }
 
+  /**
+   * Calculate the words typed per minute
+   * @returns {number}
+   */
   calculateWordsPerMinute(){
     const wordsArray = this.stringToType.split(' ');
     const length = wordsArray.length;
@@ -51,14 +60,25 @@ class gameView{
     return length/time;
   }
 
+  /**
+   * Compute the time in minutes it took to play the game
+   * @returns {number} - number of minutes
+   */
   computeTimeInMinutes(){
     return (this.player.endTime - this.player.startTime)/ONE_MINUTE;
   }
 
+  /**
+   * Compute the time in seconds it took to play the game
+   * @returns {number} - number of seconds
+   */
   computeTimeInSeconds(){
     return (this.player.endTime - this.player.startTime)/ONE_SECOND;
   }
 
+  /**
+   * Run end of game functionality to update the socket and game statistics
+   */
   endTheGame() {
     if(!this.player.finished){
       stdout.write(`\nYou took ${this.computeTimeInSeconds()} Seconds`);
@@ -70,6 +90,10 @@ class gameView{
     //add data to DB
   }
 
+  /**
+   * Updates the players data on a correct keystroke
+   * @param key {string} - the key typed by the user
+   */
   correctKeyTyped(key){
     this.player.typedStringInBooleanForm += INDICATE_CORRECT_KEYPRESS;
     this.player.typedString += key;
@@ -77,6 +101,10 @@ class gameView{
     stdout.write(key.correct);
   }
 
+  /**
+   * Updates the players data on an incorrect keystroke
+   * @param key {string} - the key typed by the user
+   */
   incorrectKeyTyped(key){
     this.player.typedStringInBooleanForm += INDICATE_INCORRECT_KEYPRESS;
     this.player.typedString += key;
@@ -84,6 +112,10 @@ class gameView{
     stdout.write(key.incorrect);
   }
 
+  /**
+   * Ensures the game stops reading input once the user is finished typing the string
+   * @returns {boolean}
+   */
   stopRecordingUserInput(){
     if (this.player.currentCursorPosition >= this.stringToType.length){
       return true;
@@ -103,6 +135,9 @@ class gameView{
     this.player.startTime = Date.now();
 
     stdin.on('data', (key) => {
+      if (key === EXIT_GAME) {
+        process.exit();
+      }
       if(user.keyboardInput === 'dvorak'){
         key = dvorak.fromEn(key);
       } else if(user.keyboardInput === 'colemak'){
@@ -112,12 +147,9 @@ class gameView{
       if(this.stopRecordingUserInput()){
         this.player.endTime = Date.now();
         this.endTheGame();
+
       } else {
-        if (key === EXIT_GAME) {
-          process.exit();
-        }
-        //Let Delete work to fix errors
-        else if (key === DELETE_LAST_ENTRY){
+        if (key === DELETE_LAST_ENTRY){
           //if the last letter you typed was wrong...
           if(this.player.typedStringInBooleanForm.slice(-1) === INDICATE_INCORRECT_KEYPRESS){
             this.player.incorrectEntries--;
