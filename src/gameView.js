@@ -1,6 +1,7 @@
 // #!/usr/bin/env node
 
 require('dotenv').config();
+const events = require('./events.js');
 const color = require('colors');
 const ansiEscapes = require('ansi-escapes');
 const clear = require('clear');
@@ -59,11 +60,13 @@ class gameView{
   }
 
   endTheGame() {
-    stdout.write(`\nYou took ${this.computeTimeInSeconds()} Seconds`);
-    stdout.write(`\nYou typed ${this.player.typedString} \n Correct Keys: ${this.player.correctEntries} \n Incorrect Keys: ${this.player.incorrectEntries}`);
-    this.player.wordsPerMinute = this.calculateWordsPerMinute();
-    this.player.finished = true;
-    //server.emit('player-finished', this.player);
+    if(!this.player.finished){
+      stdout.write(`\nYou took ${this.computeTimeInSeconds()} Seconds`);
+      stdout.write(`\nYou typed ${this.player.typedString} \n Correct Keys: ${this.player.correctEntries} \n Incorrect Keys: ${this.player.incorrectEntries}`);
+      this.player.wordsPerMinute = this.calculateWordsPerMinute();
+      this.player.finished = true;
+      events.emit('player-finished', {player: this.player.name});
+    }
     //add data to DB
   }
 
