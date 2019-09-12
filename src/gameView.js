@@ -14,7 +14,14 @@ color.setTheme({
   incorrect: 'red',
 });
 
-const API_URL = 'process.env.SOCKET_URL' || 'https://supertype-rev-socket-server.herokuapp.com/';
+let API_URL;
+
+if(process.env.NODE_ENV === 'production'){
+  API_URL = 'https://supertype-rev-socket-server.herokuapp.com/';
+} else if (process.env.NODE_ENV === 'development'){
+  API_URL = 'http://localhost:8080';
+}
+
 const EXIT_GAME = '\u0003';
 const DELETE_LAST_ENTRY = '\u007f';
 const INDICATE_INCORRECT_KEYPRESS = 'f';

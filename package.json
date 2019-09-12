@@ -12,7 +12,8 @@
     "test-watch": "jest --watchAll --verbose",
     "jsdoc": "jsdoc -c ./docs/config/jsdoc.config.json",
     "lint": "eslint \"**/*.js\"",
-    "start": "node index.js",
+    "start": "NODE_ENV=production node src/gameView.js",
+    "dev": "NODE_ENV=development nodemon src/gameView.js",
     "startDB": "mkdir -p ./.db && mongod --dbpath ./.db"
   },
   "jest": {
