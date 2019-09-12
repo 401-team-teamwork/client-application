@@ -5,7 +5,9 @@ require('dotenv').config();
 const socketIo = require('socket.io-client');
 const initialUserPrompts = require('./userPrompts').initialUserPrompts;
 const welcome = require('./userPrompts').welcome;
-const gameView = require('./gameView');
+
+const gameView = require('gameView');
+
 
 const clear = require('clear');
 
