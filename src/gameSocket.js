@@ -41,6 +41,7 @@ server.on('log', player => {
 server.on('new-game', game => {
     console.log(user);
     let view = new gameView(game.text, user.username);
+    events.emit('user', user);
     clear();
     console.log('New Game!');
     view.init();
@@ -57,4 +58,3 @@ server.on('end-game', message => {
 });
 
 
-module.exports = user;

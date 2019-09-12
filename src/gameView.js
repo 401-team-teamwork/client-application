@@ -7,7 +7,6 @@ const ansiEscapes = require('ansi-escapes');
 const clear = require('clear');
 const colemak = require('convert-layout/colemak');
 const dvorak = require('convert-layout/dvorak');
-const user = require('./gameSocket');
 
 color.setTheme({
   correct: 'green',
@@ -23,6 +22,7 @@ const ONE_SECOND = 1000;
 
 const stdin = process.stdin;
 const stdout = process.stdout;
+let user;
 
 /** Class representing a generic game view. */
 class gameView{
@@ -129,6 +129,7 @@ class gameView{
     stdin.setRawMode(true);
     stdin.resume();
     stdin.setEncoding('utf8');
+    console.log(user);
 
     stdout.write(`\nStart typing:\n${this.stringToType}\n\n`);
 
@@ -177,5 +178,9 @@ class gameView{
   }
 
 }
+
+events.on('user', (userObject) => {
+    user = userObject;
+});
 
 module.exports = gameView;
