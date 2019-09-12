@@ -8,12 +8,12 @@
     "typing": "src/gameView.js"
   },
   "scripts": {
-    "test": "jest --verbose",
+    "test": "jest --verbose --coverage",
     "test-watch": "jest --watchAll --verbose",
     "jsdoc": "jsdoc -c ./docs/config/jsdoc.config.json",
     "lint": "eslint \"**/*.js\"",
     "start": "NODE_ENV=production node src/gameSocket.js",
-    "dev": "NODE_ENV=development nodemon src/gameSocket.js.js",
+    "dev": "NODE_ENV=development node src/gameSocket.js",
     "startDB": "mkdir -p ./.db && mongod --dbpath ./.db"
   },
   "jest": {
@@ -30,6 +30,7 @@
     "colors": "^1.3.3",
     "convert-layout": "^0.8.0",
     "dotenv": "^8.1.0",
+    "events": "^3.0.0",
     "figlet": "^1.2.4",
     "inquirer": "^7.0.0",
     "jest": "^24.8.0",

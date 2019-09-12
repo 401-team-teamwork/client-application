@@ -1,11 +1,13 @@
 'use strict';
 
 require('dotenv').config();
-
+const events = require('./events.js');
 const socketIo = require('socket.io-client');
 const initialUserPrompts = require('./userPrompts').initialUserPrompts;
 const welcome = require('./userPrompts').welcome;
+
 const gameView = require('./gameView');
+
 
 const clear = require('clear');
 
@@ -19,17 +21,33 @@ if(process.env.NODE_ENV === 'production'){
 
 const server = socketIo.connect(`${API_URL}`);
 
-//Socket listeners
-server.on('log', message => {
-    console.log(message);
+//Start the game flow
+const run = async () => {
+    welcome();
+    let newUser = await initialUserPrompts();
+    console.log(newUser);
+    server.emit('new-player', newUser);
+    return newUser;
+};
 
+let user = run();
+
+//Socket listeners
+server.on('log', player => {
+    user = player;
+    console.log(player);
 });
 
 server.on('new-game', game => {
+    console.log(user);
     let view = new gameView(game.text, user.username);
     clear();
     console.log('New Game!');
     view.init();
+});
+
+events.on('player-finished', (player) => {
+    server.emit('player-finished', player);
 });
 
 server.on('end-game', message => {
@@ -38,15 +56,5 @@ server.on('end-game', message => {
     process.exit();
 });
 
-//Start the game flow
-const run = async () => {
-    welcome();
-    let newUser = await initialUserPrompts()
-    console.log(newUser);
-    server.emit('new-player', newUser);
-    return newUser;
-};
-
-let user = run();
 
 module.exports = user;
