@@ -1,5 +1,6 @@
 // #!/usr/bin/env node
 
+require('dotenv').config();
 const color = require('colors');
 const ansiEscapes = require('ansi-escapes');
 const socketIo = require('socket.io-client');
@@ -13,7 +14,7 @@ color.setTheme({
   incorrect: 'red',
 });
 
-const API_URL = 'http://localhost:8080' || 'https://401-midterm-socket-server.herokuapp.com';
+const API_URL = 'process.env.SOCKET_URL' || 'https://supertype-rev-socket-server.herokuapp.com/';
 const EXIT_GAME = '\u0003';
 const DELETE_LAST_ENTRY = '\u007f';
 const INDICATE_INCORRECT_KEYPRESS = 'f';
