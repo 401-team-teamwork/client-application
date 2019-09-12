@@ -55,7 +55,8 @@ return inquirer.prompt(questions);
     console.log(
         chalk.blueBright(
             figlet.textSync('SUPERTYPE : REVOLUTION', {font:'ANSI Shadow', horizontalLayout: 'full' })
-        ))
+        ));
+    return true;
   }
 };
 

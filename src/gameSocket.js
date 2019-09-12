@@ -21,29 +21,6 @@ if(process.env.NODE_ENV === 'production'){
 
 const server = socketIo.connect(`${API_URL}`);
 
-//Socket listeners
-server.on('log', message => {
-    console.log(message);
-});
-
-server.on('new-game', game => {
-    let view = new gameView(game.text, user.username);
-    clear();
-    console.log('New Game!');
-    view.init();
-});
-
-events.on('player-finished', (player) => {
-    console.log(player);
-    server.emit('player-finished', player);
-});
-
-server.on('end-game', message => {
-    console.log(message);
-    console.log(`Thank you for playing, ${user.username}!\n\n`);
-    process.exit();
-});
-
 //Start the game flow
 const run = async () => {
     welcome();
@@ -54,5 +31,30 @@ const run = async () => {
 };
 
 let user = run();
+
+//Socket listeners
+server.on('log', player => {
+    user = player;
+    console.log(player);
+});
+
+server.on('new-game', game => {
+    console.log(user);
+    let view = new gameView(game.text, user.username);
+    clear();
+    console.log('New Game!');
+    view.init();
+});
+
+events.on('player-finished', (player) => {
+    server.emit('player-finished', player);
+});
+
+server.on('end-game', message => {
+    console.log(message);
+    console.log(`Thank you for playing, ${user.username}!\n\n`);
+    process.exit();
+});
+
 
 module.exports = user;
