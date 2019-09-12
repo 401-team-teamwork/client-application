@@ -3,17 +3,18 @@
 require('dotenv').config();
 const color = require('colors');
 const ansiEscapes = require('ansi-escapes');
+const socketIo = require('socket.io-client');
+const getUserNameAndPassword = require('./userPrompts').getUserNameAndPassword;
 const clear = require('clear');
-const colemak = require('convert-layout/colemak');
-const dvorak = require('convert-layout/dvorak');
-const user = require('./gameSocket');
+const figlet = require('figlet');
+const chalk = require('chalk');
 
 color.setTheme({
   correct: 'green',
   incorrect: 'red',
 });
 
-
+const API_URL = 'process.env.SOCKET_URL' || 'https://supertype-rev-socket-server.herokuapp.com/';
 const EXIT_GAME = '\u0003';
 const DELETE_LAST_ENTRY = '\u007f';
 const INDICATE_INCORRECT_KEYPRESS = 'f';
@@ -21,8 +22,11 @@ const INDICATE_CORRECT_KEYPRESS = 't';
 const ONE_MINUTE = 60000;
 const ONE_SECOND = 1000;
 
+const server = socketIo.connect(`${API_URL}`);
 const stdin = process.stdin;
 const stdout = process.stdout;
+
+let user;
 
 class gameView{
 
@@ -64,6 +68,7 @@ class gameView{
     this.player.wordsPerMinute = this.calculateWordsPerMinute();
     this.player.finished = true;
     server.emit('player-finished', this.player);
+    // updateUserStats(this.player.correct, this.player.incorrect, WPM);
     //add data to DB
   }
   correctKeyTyped(key){
@@ -99,11 +104,6 @@ class gameView{
     this.player.startTime = Date.now();
 
     stdin.on('data', (key) => {
-      if(user.keyboardInput === 'dvorak'){
-        key = dvorak.fromEn(key);
-      } else if(user.keyboardInput === 'colemak'){
-        key = colemak.fromEn(key);
-      }
       //control + C exits the program
       if(this.stopRecordingUserInput()){
         this.player.endTime = Date.now();
@@ -141,5 +141,40 @@ class gameView{
   }
 
 }
+
+
+//intitial prompts to get a player when the socket connects
+clear();
+console.log(
+  chalk.blueBright(
+    figlet.textSync('SUPERTYPE :   REVOLUTION', {font:'ANSI Shadow', horizontalLayout: 'full' })
+  )
+);
+
+const run = async () => {
+  user = await getUserNameAndPassword();
+  server.emit('new-player', user);
+};
+run();
+
+
+//Socket listeners
+server.on('log', message => {
+  console.log(message);
+
+});
+
+server.on('new-game', game => {
+  let view = new gameView(game.text, user.username);
+  clear();
+  console.log('New Game!');
+  view.init();
+});
+
+server.on('end-game', message => {
+  console.log(message);
+  console.log(`Thank you for playing, ${user.username}!\n\n`);
+  process.exit();
+});
 
 module.exports = gameView;
