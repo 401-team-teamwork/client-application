@@ -5,6 +5,7 @@ require('dotenv').config();
 const socketIo = require('socket.io-client');
 const getUserNameAndPassword = require('./userPrompts').getUserNameAndPassword;
 const welcome = require('./userPrompts').welcome;
+const gameView = require('gameView');
 
 const clear = require('clear');
 
