@@ -36,6 +36,7 @@
     "supertest": "^4.0.2"
   },
   "devDependencies": {
+    "conf": "^6.0.1",
     "eslint": "^6.2.1"
   }
 }

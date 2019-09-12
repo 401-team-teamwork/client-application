@@ -1,9 +1,13 @@
 // #!/usr/bin/env node
 
+
 require('dotenv').config();
 const color = require('colors');
 const ansiEscapes = require('ansi-escapes');
 const socketIo = require('socket.io-client');
+const userSignUp = require('./gamePostRoutes').UserSignUp;
+const authenticateUserSignIn = require('./gamePostRoutes').authenticateUserSignIn;
+const updateUserStats = require('./gamePostRoutes').updateUserStats;
 const getUserNameAndPassword = require('./userPrompts').getUserNameAndPassword;
 const clear = require('clear');
 const figlet = require('figlet');
@@ -14,7 +18,7 @@ color.setTheme({
   incorrect: 'red',
 });
 
-const API_URL = 'process.env.SOCKET_URL' || 'https://supertype-rev-socket-server.herokuapp.com/';
+const API_URL = 'process.env.SOCKET_URL';
 const EXIT_GAME = '\u0003';
 const DELETE_LAST_ENTRY = '\u007f';
 const INDICATE_INCORRECT_KEYPRESS = 'f';
@@ -68,7 +72,7 @@ class gameView{
     this.player.wordsPerMinute = this.calculateWordsPerMinute();
     this.player.finished = true;
     server.emit('player-finished', this.player);
-    // updateUserStats(this.player.correct, this.player.incorrect, WPM);
+    updateUserStats(this.player.correct, this.player.incorrect, this.player.wordsPerMinute);
     //add data to DB
   }
   correctKeyTyped(key){
@@ -154,6 +158,8 @@ console.log(
 const run = async () => {
   user = await getUserNameAndPassword();
   server.emit('new-player', user);
+   authenticateUserSignIn(user.username, user.password);
+  //userSignUp(user.username, user.password);
 };
 run();
 
