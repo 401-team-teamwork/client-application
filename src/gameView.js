@@ -103,6 +103,9 @@ class gameView{
     this.player.startTime = Date.now();
 
     stdin.on('data', (key) => {
+      if (key === EXIT_GAME) {
+        process.exit();
+      }
       if(user.keyboardInput === 'dvorak'){
         key = dvorak.fromEn(key);
       } else if(user.keyboardInput === 'colemak'){
@@ -112,12 +115,9 @@ class gameView{
       if(this.stopRecordingUserInput()){
         this.player.endTime = Date.now();
         this.endTheGame();
+
       } else {
-        if (key === EXIT_GAME) {
-          process.exit();
-        }
-        //Let Delete work to fix errors
-        else if (key === DELETE_LAST_ENTRY){
+        if (key === DELETE_LAST_ENTRY){
           //if the last letter you typed was wrong...
           if(this.player.typedStringInBooleanForm.slice(-1) === INDICATE_INCORRECT_KEYPRESS){
             this.player.incorrectEntries--;

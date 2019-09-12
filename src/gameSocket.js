@@ -24,7 +24,6 @@ const server = socketIo.connect(`${API_URL}`);
 //Socket listeners
 server.on('log', message => {
     console.log(message);
-
 });
 
 server.on('new-game', game => {
@@ -37,7 +36,7 @@ server.on('new-game', game => {
 events.on('player-finished', (player) => {
     console.log(player);
     server.emit('player-finished', player);
-})
+});
 
 server.on('end-game', message => {
     console.log(message);
@@ -48,7 +47,7 @@ server.on('end-game', message => {
 //Start the game flow
 const run = async () => {
     welcome();
-    let newUser = await initialUserPrompts()
+    let newUser = await initialUserPrompts();
     console.log(newUser);
     server.emit('new-player', newUser);
     return newUser;
