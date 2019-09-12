@@ -1,6 +1,9 @@
 'use strict';
 
 const inquirer = require('inquirer');
+const figlet = require('figlet');
+const chalk = require('chalk');
+const clear = require('clear');
 
 module.exports = {
   getUserNameAndPassword: () => {
@@ -34,6 +37,14 @@ module.exports = {
 
     return inquirer.prompt(questions);
   },
+
+  welcome: () => {
+    clear();
+    console.log(
+        chalk.blueBright(
+            figlet.textSync('SUPERTYPE :   REVOLUTION', {font:'ANSI Shadow', horizontalLayout: 'full' })
+        ))
+  }
 };
 
 
