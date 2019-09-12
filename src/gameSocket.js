@@ -3,9 +3,11 @@
 require('dotenv').config();
 
 const socketIo = require('socket.io-client');
-const getUserNameAndPassword = require('./userPrompts').getUserNameAndPassword;
+const initialUserPrompts = require('./userPrompts').initialUserPrompts;
 const welcome = require('./userPrompts').welcome;
+
 const gameView = require('gameView');
+
 
 const clear = require('clear');
 
@@ -41,7 +43,8 @@ server.on('end-game', message => {
 //Start the game flow
 const run = async () => {
     welcome();
-    let newUser = await getUserNameAndPassword();
+    let newUser = await initialUserPrompts()
+    console.log(newUser);
     server.emit('new-player', newUser);
     return newUser;
 };

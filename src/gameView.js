@@ -4,6 +4,9 @@ require('dotenv').config();
 const color = require('colors');
 const ansiEscapes = require('ansi-escapes');
 const clear = require('clear');
+const colemak = require('convert-layout/colemak');
+const dvorak = require('convert-layout/dvorak');
+const user = require('./gameSocket');
 
 color.setTheme({
   correct: 'green',
@@ -97,6 +100,11 @@ class gameView{
     this.player.startTime = Date.now();
 
     stdin.on('data', (key) => {
+      if(user.keyboardInput === 'dvorak'){
+        key = dvorak.fromEn(key);
+      } else if(user.keyboardInput === 'colemak'){
+        key = colemak.fromEn(key);
+      }
       //control + C exits the program
       if(this.stopRecordingUserInput()){
         this.player.endTime = Date.now();
