@@ -1,12 +1,12 @@
 'use strict';
 
 require('dotenv').config();
-
+const events = require('./events.js');
 const socketIo = require('socket.io-client');
 const initialUserPrompts = require('./userPrompts').initialUserPrompts;
 const welcome = require('./userPrompts').welcome;
 
-const gameView = require('gameView');
+const gameView = require('./gameView');
 
 
 const clear = require('clear');
@@ -33,6 +33,11 @@ server.on('new-game', game => {
     console.log('New Game!');
     view.init();
 });
+
+events.on('player-finished', (player) => {
+    console.log(player);
+    server.emit('player-finished', player);
+})
 
 server.on('end-game', message => {
     console.log(message);
