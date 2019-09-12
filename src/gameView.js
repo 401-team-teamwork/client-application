@@ -1,9 +1,14 @@
 // #!/usr/bin/env node
 
+
 require('dotenv').config();
 const events = require('./events.js');
 const color = require('colors');
 const ansiEscapes = require('ansi-escapes');
+
+const userSignUp = require('./gamePostRoutes').UserSignUp;
+const authenticateUserSignIn = require('./gamePostRoutes').authenticateUserSignIn;
+const updateUserStats = require('./gamePostRoutes').updateUserStats;
 const clear = require('clear');
 const colemak = require('convert-layout/colemak');
 const dvorak = require('convert-layout/dvorak');
@@ -86,14 +91,10 @@ class gameView{
       this.player.wordsPerMinute = this.calculateWordsPerMinute();
       this.player.finished = true;
       events.emit('player-finished', {player: this.player.name});
+      updateUserStats(this.player.correct, this.player.incorrect, this.player.wordsPerMinute);
     }
-    //add data to DB
   }
 
-  /**
-   * Updates the players data on a correct keystroke
-   * @param key {string} - the key typed by the user
-   */
   correctKeyTyped(key){
     this.player.typedStringInBooleanForm += INDICATE_CORRECT_KEYPRESS;
     this.player.typedString += key;
