@@ -4,17 +4,21 @@ require('dotenv').config();
 const color = require('colors');
 const ansiEscapes = require('ansi-escapes');
 const socketIo = require('socket.io-client');
-const getUserNameAndPassword = require('./userPrompts').getUserNameAndPassword;
+const initialUserPrompts = require('./userPrompts').initialUserPrompts;
 const clear = require('clear');
 const figlet = require('figlet');
 const chalk = require('chalk');
+const colemak = require('convert-layout/colemak');
+const dvorak = require('convert-layout/dvorak');
+const boxen = require('boxen');
+
 
 color.setTheme({
   correct: 'green',
   incorrect: 'red',
 });
 
-const API_URL = 'process.env.SOCKET_URL' || 'https://supertype-rev-socket-server.herokuapp.com/';
+const API_URL =  'https://supertype-rev-socket-server.herokuapp.com/';
 const EXIT_GAME = '\u0003';
 const DELETE_LAST_ENTRY = '\u007f';
 const INDICATE_INCORRECT_KEYPRESS = 'f';
@@ -99,11 +103,17 @@ class gameView{
     stdin.resume();
     stdin.setEncoding('utf8');
 
-    stdout.write(`\nStart typing:\n${this.stringToType}\n\n`);
+    stdout.write(boxen('\nStart typing:\n', {align: 'left', padding: 1 | 'left' , float: 'left', borderStyle: 'bold'}));
+    stdout.write(`${this.stringToType}\n\n`);
 
     this.player.startTime = Date.now();
 
-    stdin.on('data', (key) => {
+      stdin.on('data', (key) => {
+        if(user.keyboardInput === 'dvorak'){
+          key = dvorak.fromEn(key);
+        } else if(user.keyboardInput === 'colemak'){
+          key = colemak.fromEn(key);
+        }
       //control + C exits the program
       if(this.stopRecordingUserInput()){
         this.player.endTime = Date.now();
@@ -152,7 +162,7 @@ console.log(
 );
 
 const run = async () => {
-  user = await getUserNameAndPassword();
+  user = await initialUserPrompts();
   server.emit('new-player', user);
 };
 run();
@@ -167,7 +177,7 @@ server.on('log', message => {
 server.on('new-game', game => {
   let view = new gameView(game.text, user.username);
   clear();
-  console.log('New Game!');
+  console.log(boxen('New Game!', {align: 'center', padding: 2 | 'right' | 2 | 'left' | 0 | 'top ' | 0 | 'bottom', float: 'center', borderStyle: 'bold'}));
   view.init();
 });
 
