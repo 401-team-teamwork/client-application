@@ -90,8 +90,8 @@ class gameView{
       stdout.write(`\nYou typed ${this.player.typedString} \n Correct Keys: ${this.player.correctEntries} \n Incorrect Keys: ${this.player.incorrectEntries}`);
       this.player.wordsPerMinute = this.calculateWordsPerMinute();
       this.player.finished = true;
-      events.emit('player-finished', {player: this.player.name});
-      updateUserStats(this.player.correct, this.player.incorrect, this.player.wordsPerMinute);
+      events.emit('player-finished', this.player);
+      updateUserStats(this.player.correctEntries, this.player.incorrectEntries, this.player.wordsPerMinute);
     }
   }
 
