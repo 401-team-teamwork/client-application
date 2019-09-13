@@ -8,6 +8,7 @@ const colemak = require('convert-layout/colemak');
 const dvorak = require('convert-layout/dvorak');
 const user = require('./gameSocket');
 
+
 color.setTheme({
   correct: 'green',
   incorrect: 'red',
@@ -63,9 +64,10 @@ class gameView{
     stdout.write(`\nYou typed ${this.player.typedString} \n Correct Keys: ${this.player.correctEntries} \n Incorrect Keys: ${this.player.incorrectEntries}`);
     this.player.wordsPerMinute = this.calculateWordsPerMinute();
     this.player.finished = true;
-    server.emit('player-finished', this.player);
+    //server.emit('player-finished', this.player);
     //add data to DB
   }
+
   correctKeyTyped(key){
     this.player.typedStringInBooleanForm += INDICATE_CORRECT_KEYPRESS;
     this.player.typedString += key;
