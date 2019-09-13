@@ -59,3 +59,15 @@ server.on('end-game', message => {
 });
 
 
+//Start the game flow
+const run = async () => {
+    welcome();
+    let newUser = await initialUserPrompts();
+    console.log(newUser);
+    server.emit('new-player', newUser);
+    return newUser;
+};
+
+let user = run();
+
+
