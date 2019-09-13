@@ -7,7 +7,7 @@ const color = require('colors');
 const ansiEscapes = require('ansi-escapes');
 
 const userSignUp = require('./gamePostRoutes').UserSignUp;
-const authenticateUserSignIn = require('./gamePostRoutes').authenticateUserSignIn;
+
 const updateUserStats = require('./gamePostRoutes').updateUserStats;
 const clear = require('clear');
 const colemak = require('convert-layout/colemak');
@@ -130,7 +130,6 @@ class gameView{
     stdin.setRawMode(true);
     stdin.resume();
     stdin.setEncoding('utf8');
-    console.log(user);
 
     stdout.write(`\nStart typing:\n${this.stringToType}\n\n`);
 
