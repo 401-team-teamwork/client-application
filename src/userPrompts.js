@@ -12,7 +12,14 @@ module.exports = {
       {
         name: 'username',
         type: 'input',
-        message: 'Please Enter Your User Name:',
+        message:chalk.greenBright.bold((boxen('Please Enter Your User Name:' , {
+          margin: {top: 1},
+          borderStyle: 'round',
+          borderColor: 'white',
+          float: 'center',
+          padding: {left: 1, right: 1}
+        }
+          ))),
         validate: function(value) {
           if (value.length) {
             return true;
@@ -25,7 +32,14 @@ module.exports = {
         name: 'password',
         type: 'password',
         mask: '#',
-        message: 'Please Enter your Password',
+        message: chalk.greenBright.bold((boxen('Please Enter Your Password:' , {
+          margin: {top: 1},
+          borderStyle: 'round',
+          borderColor: 'white',
+          float: 'center',
+          padding: {left: 1, right: 1}
+        }
+        ))),
         validate: function(value) {
           if (value.length) {
             return true;
@@ -37,7 +51,15 @@ module.exports = {
       {
         name:'keyboardInput',
         type: 'input',
-        message: 'Select your keyboard (QWERTY, Dvorak, Colemak) ',
+        message: chalk.greenBright.bold((boxen('Please Select Your Keyboard: QWERTY  --  Dvorak  --  Colemak' , {
+              margin: {top: 1},
+              borderStyle: 'round',
+              borderColor: 'white',
+              float: 'center',
+              padding: {left: 1, right: 1}
+
+            }
+        ))),
         validate: function(layout){
           if (layout.toLowerCase() === 'qwerty' || layout.toLowerCase() === 'dvorak' || layout.toLowerCase() === 'colemak') {
             return true;
@@ -53,9 +75,11 @@ module.exports = {
   welcome: () => {
     clear();
     console.log(
+
       chalk.blueBright(
         figlet.textSync('SUPERTYPE : REVOLUTION', {font:'ANSI Shadow', horizontalLayout: 'full' })
       ));
+
     return true;
   },
 };
