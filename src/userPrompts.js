@@ -17,9 +17,9 @@ module.exports = {
           borderStyle: 'round',
           borderColor: 'white',
           float: 'center',
-          padding: {left: 1, right: 1}
+          padding: {left: 1, right: 1},
         }
-          ))),
+        ))),
         validate: function(value) {
           if (value.length) {
             return true;
@@ -37,7 +37,7 @@ module.exports = {
           borderStyle: 'round',
           borderColor: 'white',
           float: 'center',
-          padding: {left: 1, right: 1}
+          padding: {left: 1, right: 1},
         }
         ))),
         validate: function(value) {
@@ -52,13 +52,13 @@ module.exports = {
         name:'keyboardInput',
         type: 'input',
         message: chalk.greenBright.bold((boxen('Please Select Your Keyboard: QWERTY  --  Dvorak  --  Colemak' , {
-              margin: {top: 1},
-              borderStyle: 'round',
-              borderColor: 'white',
-              float: 'center',
-              padding: {left: 1, right: 1}
+          margin: {top: 1},
+          borderStyle: 'round',
+          borderColor: 'white',
+          float: 'center',
+          padding: {left: 1, right: 1},
 
-            }
+        }
         ))),
         validate: function(layout){
           if (layout.toLowerCase() === 'qwerty' || layout.toLowerCase() === 'dvorak' || layout.toLowerCase() === 'colemak') {

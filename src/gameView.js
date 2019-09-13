@@ -88,11 +88,10 @@ class gameView{
   endTheGame() {
     if(!this.player.finished){
       // stdout.write(`\n`);
-      stdout.write(chalk.greenBright.bold(boxen(`\nYou took ${this.computeTimeInSeconds()}
-      Seconds!!\nYou typed: "${this.player.typedString}"
+      stdout.write(chalk.greenBright.bold(boxen(`\nYou took ${this.computeTimeInSeconds()} Seconds!!\nYou typed: "${this.player.typedString}"
        \n Correct Keys: ${this.player.correctEntries} 
        \n Incorrect Keys: ${this.player.incorrectEntries}`,
-{
+      {
         margin: {top: 1},
         borderStyle: 'round',
         borderColor: 'white',
