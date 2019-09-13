@@ -35,28 +35,29 @@ module.exports = {
         },
       },
       {
-      name:'keyboardInput',
+        name:'keyboardInput',
         type: 'input',
         message: 'Select your keyboard (QWERTY, Dvorak, Colemak) ',
         validate: function(layout){
-      if (layout.toLowerCase() === 'qwerty' || layout.toLowerCase() === 'dvorak' || layout.toLowerCase() === 'colemak') {
-        return true;
-      } else {
-        return 'Please Pick a Valid Keyboard Layout';
-      }
-    },
+          if (layout.toLowerCase() === 'qwerty' || layout.toLowerCase() === 'dvorak' || layout.toLowerCase() === 'colemak') {
+            return true;
+          } else {
+            return 'Please Pick a Valid Keyboard Layout';
+          }
+        },
+      },
+    ];
+    return inquirer.prompt(questions);
   },
-];
-return inquirer.prompt(questions);
-},
 
   welcome: () => {
     clear();
     console.log(
-        chalk.blueBright(
-            figlet.textSync('SUPERTYPE : REVOLUTION', {font:'ANSI Shadow', horizontalLayout: 'full' })
-        ))
-  }
+      chalk.blueBright(
+        figlet.textSync('SUPERTYPE : REVOLUTION', {font:'ANSI Shadow', horizontalLayout: 'full' })
+      ));
+    return true;
+  },
 };
 
 
