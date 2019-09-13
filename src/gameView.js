@@ -1,19 +1,20 @@
 // #!/usr/bin/env node
 
+
 require('dotenv').config();
+const events = require('./events.js');
 const color = require('colors');
 const ansiEscapes = require('ansi-escapes');
+const updateUserStats = require('./gamePostRoutes').updateUserStats;
 const clear = require('clear');
 const colemak = require('convert-layout/colemak');
 const dvorak = require('convert-layout/dvorak');
-const user = require('./gameSocket');
 
 
 color.setTheme({
   correct: 'green',
   incorrect: 'red',
 });
-
 
 const EXIT_GAME = '\u0003';
 const DELETE_LAST_ENTRY = '\u007f';
@@ -24,9 +25,16 @@ const ONE_SECOND = 1000;
 
 const stdin = process.stdin;
 const stdout = process.stdout;
+let user;
 
+/** Class representing a generic game view. */
 class gameView{
 
+  /**
+   * Game View constructor
+   * @param string {string} - the string to type in the game
+   * @param name {string} - the name of the player
+   */
   constructor(string, name){
     this.stringToType = string;
     this.player = {
@@ -44,6 +52,10 @@ class gameView{
     };
   }
 
+  /**
+   * Calculate the words typed per minute
+   * @returns {number}
+   */
   calculateWordsPerMinute(){
     const wordsArray = this.stringToType.split(' ');
     const length = wordsArray.length;
@@ -51,21 +63,34 @@ class gameView{
     return length/time;
   }
 
+  /**
+   * Compute the time in minutes it took to play the game
+   * @returns {number} - number of minutes
+   */
   computeTimeInMinutes(){
     return (this.player.endTime - this.player.startTime)/ONE_MINUTE;
   }
 
+  /**
+   * Compute the time in seconds it took to play the game
+   * @returns {number} - number of seconds
+   */
   computeTimeInSeconds(){
     return (this.player.endTime - this.player.startTime)/ONE_SECOND;
   }
 
+  /**
+   * Run end of game functionality to update the socket and game statistics
+   */
   endTheGame() {
-    stdout.write(`\nYou took ${this.computeTimeInSeconds()} Seconds`);
-    stdout.write(`\nYou typed ${this.player.typedString} \n Correct Keys: ${this.player.correctEntries} \n Incorrect Keys: ${this.player.incorrectEntries}`);
-    this.player.wordsPerMinute = this.calculateWordsPerMinute();
-    this.player.finished = true;
-    //server.emit('player-finished', this.player);
-    //add data to DB
+    if(!this.player.finished){
+      stdout.write(`\nYou took ${this.computeTimeInSeconds()} Seconds`);
+      stdout.write(`\nYou typed ${this.player.typedString} \n Correct Keys: ${this.player.correctEntries} \n Incorrect Keys: ${this.player.incorrectEntries}`);
+      this.player.wordsPerMinute = this.calculateWordsPerMinute();
+      this.player.finished = true;
+      events.emit('player-finished', this.player);
+      updateUserStats(this.player.correctEntries, this.player.incorrectEntries, this.player.wordsPerMinute);
+    }
   }
 
   correctKeyTyped(key){
@@ -75,6 +100,10 @@ class gameView{
     stdout.write(key.correct);
   }
 
+  /**
+   * Updates the players data on an incorrect keystroke
+   * @param key {string} - the key typed by the user
+   */
   incorrectKeyTyped(key){
     this.player.typedStringInBooleanForm += INDICATE_INCORRECT_KEYPRESS;
     this.player.typedString += key;
@@ -82,6 +111,10 @@ class gameView{
     stdout.write(key.incorrect);
   }
 
+  /**
+   * Ensures the game stops reading input once the user is finished typing the string
+   * @returns {boolean}
+   */
   stopRecordingUserInput(){
     if (this.player.currentCursorPosition >= this.stringToType.length){
       return true;
@@ -101,21 +134,21 @@ class gameView{
     this.player.startTime = Date.now();
 
     stdin.on('data', (key) => {
-      if(user.keyboardInput === 'dvorak'){
+      if (key === EXIT_GAME) {
+        process.exit();
+      }
+      if(user.keyboardInput === 'Dvorak'){
         key = dvorak.fromEn(key);
-      } else if(user.keyboardInput === 'colemak'){
+      } else if(user.keyboardInput === 'Colemak'){
         key = colemak.fromEn(key);
       }
       //control + C exits the program
       if(this.stopRecordingUserInput()){
         this.player.endTime = Date.now();
         this.endTheGame();
+
       } else {
-        if (key === EXIT_GAME) {
-          process.exit();
-        }
-        //Let Delete work to fix errors
-        else if (key === DELETE_LAST_ENTRY){
+        if (key === DELETE_LAST_ENTRY){
           //if the last letter you typed was wrong...
           if(this.player.typedStringInBooleanForm.slice(-1) === INDICATE_INCORRECT_KEYPRESS){
             this.player.incorrectEntries--;
@@ -143,5 +176,9 @@ class gameView{
   }
 
 }
+
+events.on('user', (userObject) => {
+    user = userObject;
+});
 
 module.exports = gameView;
