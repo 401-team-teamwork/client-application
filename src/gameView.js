@@ -9,6 +9,10 @@ const updateUserStats = require('./gamePostRoutes').updateUserStats;
 const clear = require('clear');
 const colemak = require('convert-layout/colemak');
 const dvorak = require('convert-layout/dvorak');
+const boxen = require('boxen');
+const chalk = require('chalk');
+
+
 
 
 color.setTheme({
@@ -84,8 +88,17 @@ class gameView{
    */
   endTheGame() {
     if(!this.player.finished){
-      stdout.write(`\nYou took ${this.computeTimeInSeconds()} Seconds`);
-      stdout.write(`\nYou typed ${this.player.typedString} \n Correct Keys: ${this.player.correctEntries} \n Incorrect Keys: ${this.player.incorrectEntries}`);
+      // stdout.write(`\n`);
+      stdout.write(chalk.greenBright.bold(boxen(`\nYou took ${this.computeTimeInSeconds()} Seconds!!\nYou typed: "${this.player.typedString}"
+       \n Correct Keys: ${this.player.correctEntries} 
+       \n Incorrect Keys: ${this.player.incorrectEntries}`,
+      {
+        margin: {top: 1},
+        borderStyle: 'round',
+        borderColor: 'white',
+        float: 'center',
+        padding: {left: 1, right: 1},
+      } )));
       this.player.wordsPerMinute = this.calculateWordsPerMinute();
       this.player.finished = true;
       events.emit('player-finished', this.player);

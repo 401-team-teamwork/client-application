@@ -74,7 +74,6 @@ module.exports = {
       });
       res.on('end', () => {
         //config.set('ty', res.headers.token);
-        console.log('Thanks for signing up!');
       });
     });
 
@@ -116,7 +115,7 @@ module.exports = {
         // console.log(chunk);
       });
       res.on('end', () => {
-        console.log('\nProfile updated!');
+
       });
     });
 

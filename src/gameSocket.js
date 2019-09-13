@@ -37,6 +37,7 @@ let user = run();
 
 //Socket listeners
 server.on('log', player => {
+  console.log(`Welcome, ${player.username}!`);
   user = player;
 });
 
