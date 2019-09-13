@@ -100,7 +100,7 @@ updateUserStats: (incorrectE, correctE, WPM) => {
             // console.log(chunk);
         });
         res.on('end', () => {
-            console.log('Profile updated!');
+            console.log('\nProfile updated!');
         });
     });
 

@@ -5,6 +5,8 @@ const events = require('./events.js');
 const socketIo = require('socket.io-client');
 const initialUserPrompts = require('./userPrompts').initialUserPrompts;
 const welcome = require('./userPrompts').welcome;
+const authenticateUserSignIn = require('./gamePostRoutes').authenticateUserSignIn;
+
 
 const gameView = require('./gameView');
 
@@ -25,7 +27,7 @@ const server = socketIo.connect(`${API_URL}`);
 const run = async () => {
     welcome();
     let newUser = await initialUserPrompts();
-    console.log(newUser);
+    authenticateUserSignIn(newUser.username, newUser.password)
     server.emit('new-player', newUser);
     return newUser;
 };
@@ -35,12 +37,11 @@ let user = run();
 //Socket listeners
 server.on('log', player => {
     user = player;
-    console.log(player);
 });
 
 server.on('new-game', game => {
-    console.log(user);
     let view = new gameView(game.text, user.username);
+    events.emit('user', user);
     clear();
     console.log('New Game!');
     view.init();
@@ -57,4 +58,3 @@ server.on('end-game', message => {
 });
 
 
-module.exports = user;

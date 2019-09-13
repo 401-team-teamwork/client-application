@@ -7,12 +7,11 @@ const color = require('colors');
 const ansiEscapes = require('ansi-escapes');
 
 const userSignUp = require('./gamePostRoutes').UserSignUp;
-const authenticateUserSignIn = require('./gamePostRoutes').authenticateUserSignIn;
+
 const updateUserStats = require('./gamePostRoutes').updateUserStats;
 const clear = require('clear');
 const colemak = require('convert-layout/colemak');
 const dvorak = require('convert-layout/dvorak');
-const user = require('./gameSocket');
 
 color.setTheme({
   correct: 'green',
@@ -28,6 +27,7 @@ const ONE_SECOND = 1000;
 
 const stdin = process.stdin;
 const stdout = process.stdout;
+let user;
 
 /** Class representing a generic game view. */
 class gameView{
@@ -178,5 +178,9 @@ class gameView{
   }
 
 }
+
+events.on('user', (userObject) => {
+    user = userObject;
+});
 
 module.exports = gameView;
