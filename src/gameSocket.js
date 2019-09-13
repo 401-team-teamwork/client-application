@@ -29,7 +29,6 @@ const run = async () => {
     welcome();
     let newUser = await initialUserPrompts();
     userSignUp(newUser.username, newUser.password);
-    // authenticateUserSignIn(newUser.username, newUser.password);
     server.emit('new-player', newUser);
     return newUser;
 };

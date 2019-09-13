@@ -87,7 +87,7 @@ class gameView{
       stdout.write(`\nYou typed ${this.player.typedString} \n Correct Keys: ${this.player.correctEntries} \n Incorrect Keys: ${this.player.incorrectEntries}`);
       this.player.wordsPerMinute = this.calculateWordsPerMinute();
       this.player.finished = true;
-      events.emit('player-finished', {player: this.player.name});
+      events.emit('player-finished', this.player);
       updateUserStats(this.player.correctEntries, this.player.incorrectEntries, this.player.wordsPerMinute);
     }
   }
@@ -136,9 +136,9 @@ class gameView{
       if (key === EXIT_GAME) {
         process.exit();
       }
-      if(user.keyboardInput === 'dvorak'){
+      if(user.keyboardInput === 'Dvorak'){
         key = dvorak.fromEn(key);
-      } else if(user.keyboardInput === 'colemak'){
+      } else if(user.keyboardInput === 'Colemak'){
         key = colemak.fromEn(key);
       }
       //control + C exits the program
