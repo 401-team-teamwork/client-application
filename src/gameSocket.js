@@ -27,7 +27,7 @@ const server = socketIo.connect(`${API_URL}`);
 const run = async () => {
     welcome();
     let newUser = await initialUserPrompts();
-    authenticateUserSignIn(newUser.username, newUser.password)
+    authenticateUserSignIn(newUser.username, newUser.password);
     server.emit('new-player', newUser);
     return newUser;
 };
