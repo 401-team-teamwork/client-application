@@ -6,7 +6,7 @@ const socketIo = require('socket.io-client');
 const initialUserPrompts = require('./userPrompts').initialUserPrompts;
 const welcome = require('./userPrompts').welcome;
 
-const gameView = require('gameView');
+const gameView = require('./gameView');
 
 
 const clear = require('clear');
@@ -43,7 +43,7 @@ server.on('end-game', message => {
 //Start the game flow
 const run = async () => {
     welcome();
-    let newUser = await initialUserPrompts()
+    let newUser = await initialUserPrompts();
     console.log(newUser);
     server.emit('new-player', newUser);
     return newUser;
