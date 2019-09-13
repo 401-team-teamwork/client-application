@@ -139,9 +139,9 @@ class gameView{
       if (key === EXIT_GAME) {
         process.exit();
       }
-      if(user.keyboardInput === 'dvorak'){
+      if(user.keyboardInput === 'Dvorak'){
         key = dvorak.fromEn(key);
-      } else if(user.keyboardInput === 'colemak'){
+      } else if(user.keyboardInput === 'Colemak'){
         key = colemak.fromEn(key);
       }
       //control + C exits the program
