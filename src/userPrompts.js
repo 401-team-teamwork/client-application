@@ -75,16 +75,11 @@ module.exports = {
   welcome: () => {
     clear();
     console.log(
-<<<<<<< HEAD
-        chalk.blueBright(
-            figlet.textSync('SUPERTYPE : REVOLUTION', {font:'ANSI Shadow', horizontalLayout: 'full' })
 
-        ));
-=======
       chalk.blueBright(
         figlet.textSync('SUPERTYPE : REVOLUTION', {font:'ANSI Shadow', horizontalLayout: 'full' })
       ));
->>>>>>> 30910399a2cb7767cc9c863e26aeaffbe10f0dc2
+
     return true;
   },
 };
