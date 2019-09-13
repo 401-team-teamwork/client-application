@@ -5,9 +5,6 @@ require('dotenv').config();
 const events = require('./events.js');
 const color = require('colors');
 const ansiEscapes = require('ansi-escapes');
-
-const userSignUp = require('./gamePostRoutes').UserSignUp;
-
 const updateUserStats = require('./gamePostRoutes').updateUserStats;
 const clear = require('clear');
 const colemak = require('convert-layout/colemak');
